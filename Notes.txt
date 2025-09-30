@@ -1,0 +1,63 @@
+
+-------------------------------------------------------------------------------------------------------------------------------
+PARTIE 1 : LES LIVRES
+
+    ajouterLivre() → Ajouter un livre dans le tableau/liste.
+
+    afficherLivres() → Afficher tous les livres.
+
+    rechercherLivreParTitre() / rechercherLivreParISBN() → Recherche simple.
+
+    supprimerLivre() → Supprimer un livre.
+
+    modifierLivre() → Modifier les infos d’un livre.
+
+    trierLivres() → Tri par titre ou année (utile pour affichage).
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+PARTIE 2 : LES UTILISATEURS
+
+    ajouterUtilisateur()
+
+    afficherUtilisateurs()
+
+    rechercherUtilisateurParID()
+
+    modifierUtilisateur()
+
+    supprimerUtilisateur()
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+PARTIE 3 : LES EMPRUNTS
+
+    enregistrerEmprunt() → Vérifie disponibilité + limite d’emprunts.
+
+    enregistrerRetour() → Marque le livre disponible.
+
+    verifierRetard() → Détecte les retards.
+
+    calculerPenalites() (si vous faites la fonctionnalité avancée).
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+PARTIE 4 : SAUVERGARDE
+
+    chargerLivres() / sauvegarderLivres()
+
+    chargerUtilisateurs() / sauvegarderUtilisateurs()
+
+    chargerEmprunts() / sauvegarderEmprunts()
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+BONUS :
+
+    Interface Graphique (ncurses)
+
+    Génération fichier HTML
+
+    Système de recommandation
+
+    ...
