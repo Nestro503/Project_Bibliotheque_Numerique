@@ -1,2 +1,11 @@
-.idea
-cmake-build-debug
+# Fichiers générés par CMake
+cmake-build-*/
+
+# Fichiers de configuration CLion / IntelliJ
+.idea/
+
+# Exécutables Windows
+*.exe
+
+*.log
+*.tmp
