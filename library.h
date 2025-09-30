@@ -1,18 +1,5 @@
-#ifndef PROJECT_BIBLIOTHEQUE_NUMERIQUE_BIBLIOTHEQUE_H
-#define PROJECT_BIBLIOTHEQUE_NUMERIQUE_BIBLIOTHEQUE_H
-
-
-typedef struct {
-    int id;                 // Identifiant unique du livre (généré automatiquement)
-    char title[100];        // Titre du livre
-    char author[100];       // Auteur du livre
-    char category[50];      // Catégorie (roman, science, etc.)
-    char isbn[20];          // ISBN du livre
-    int year;               // Année de publication
-    int status;             // 1 = disponible, 0 = emprunté
-    int nbLoans;            // Nombre total d’emprunts (utile pour les statistiques)
-} Book;
-
+#ifndef PROJECT_BIBLIOTHEQUE_NUMERIQUE_LIBRARY_H
+#define PROJECT_BIBLIOTHEQUE_NUMERIQUE_LIBRARY_H
 
 typedef struct {
     int id;                 // Identifiant unique de l’utilisateur
@@ -35,4 +22,4 @@ typedef struct {
 
 
 
-#endif //PROJECT_BIBLIOTHEQUE_NUMERIQUE_BIBLIOTHEQUE_H
+#endif //PROJECT_BIBLIOTHEQUE_NUMERIQUE_LIBRARY_H
