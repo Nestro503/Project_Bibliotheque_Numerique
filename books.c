@@ -152,15 +152,93 @@ void displayAllBooks(Book books[], int nbBooks) {
 }
 
 
-// Search by title
-Book* searchBookByTitle(Book books[], int nbBooks, const char* title) {
+Book* searchBook(Book books[], int nbBooks, int mode) {
+    int choice;
+    char input[100];
+
+    printf("\n=== Recherche de livre ===\n");
+    printf("Rechercher par :\n");
+    printf("1. Titre\n");
+    printf("2. Auteur\n");
+    printf("3. ISBN\n");
+    printf("4. Catégorie\n");
+    printf("Votre choix : ");
+    scanf("%d", &choice);
+    getchar();
+
+    printf("Entrez le mot-clé : ");
+    fgets(input, 100, stdin);
+    input[strcspn(input, "\n")] = '\0';
+
+    Book *found = NULL;
+    printf("\nRésultats :\n");
+
     for (int i = 0; i < nbBooks; i++) {
-        if (strcmp(books[i].title, title) == 0) {
-            return &books[i];
+        int match = 0;
+
+        switch (choice) {
+            case 1: if (strcmp(books[i].title, input) == 0) match = 1; break;
+            case 2: if (strcmp(books[i].author, input) == 0) match = 1; break;
+            case 3: if (strcmp(books[i].isbn, input) == 0) match = 1; break;
+            case 4: if (strcmp(books[i].category, input) == 0) match = 1; break;
+            default: printf("Option invalide.\n"); return NULL;
+        }
+
+        if (match) {
+            printf("-----------------------------------------------\n");
+            printf("ID : %d\nTitre : %s\nAuteur : %s\nISBN : %s\nCategorie : %s\nStatut : %s\nEmprunts : %d\n",
+                   books[i].id, books[i].title, books[i].author, books[i].isbn,
+                   books[i].category, books[i].status ? "Disponible" : "Emprunté",
+                   books[i].nbLoans);
+
+            found = &books[i];
         }
     }
-    return NULL;
+
+    if (!found) {
+        printf("\nAucun livre trouve\n\n");
+        return NULL;
+    }
+
+    printf("-----------------------------------------------\n");
+
+    // Mode Admin
+    if (mode == 0) {
+        printf("\nActions possibles :\n");
+        printf("1. Modifier le livre\n");
+        printf("2. Supprimer le livre\n");
+        printf("0. Retour\n");
+        printf("Votre choix : ");
+
+        int action;
+        scanf("%d", &action);
+        getchar();
+
+        if (action == 1) modifyBook(books, nbBooks, found->id);
+        else if (action == 2) deleteBook(books, nbBooks, found->id);
+        else printf("Retour au menu.\n");
+    }
+
+        // Mode User
+    else {
+        if (found->status == 1) {
+            printf("\nCe livre est disponible\n");
+            printf("Souhaitez-vous l'emprunter ? (y/n) : ");
+            char c;
+            scanf(" %c", &c);
+            getchar();
+
+            if (c == 'y' || c == 'Y') {
+                printf("Fonction emprunt non encore implementee.\n");
+            }
+        } else {
+            printf("\nCe livre est deja emprunte\n\n");
+        }
+    }
+
+    return found;
 }
+
 
 // Modify book
 void modifyBook(Book books[], int nbBooks, int id) {
@@ -226,7 +304,7 @@ void deleteBook(Book books[], int *nbBooks, int id) {
     scanf(" %c", &confirm);
     getchar(); // nettoyer buffer
 
-    if (confirm != 'y' && confirm != 'Y') {
+    if (confirm != 'y') {
         printf("Suppression annulee. Aucun changement effectue.\n\n");
         return;
     }

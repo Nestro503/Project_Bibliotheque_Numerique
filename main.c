@@ -8,77 +8,66 @@
 
 #define MAX_BOOKS 100
 
+// 0 = admin, 1 = user
 void adminMenu(Book books[], int *nbBooks) {
     int choice;
-    char searchTitle[100];
 
     while (1) {
         displayAllBooks(books, *nbBooks);
 
-        printf("=== ADMIN MENU ===\n");
-        printf("1. Add Book\n");
-        printf("2. Search Book\n");
-        printf("0. Logout\n");
-        printf("Choice: ");
+        printf("=== MENU ADMIN ===\n");
+        printf("1. Ajouter un livre\n");
+        printf("2. Rechercher un livre\n");
+        printf("0. Déconnexion\n");
+        printf("Choix : ");
         scanf("%d", &choice);
         getchar();
 
-        if (choice == 0) break;
-
-        if (choice == 1) {
-            addBook(books, nbBooks);
+        if (choice == 0) {
+            printf("Déconnexion...\n");
+            break;
         }
-        else if (choice == 2) {
-            printf("Enter title: ");
-            fgets(searchTitle, 100, stdin);
-            searchTitle[strcspn(searchTitle, "\n")] = '\0';
 
-            Book *b = searchBookByTitle(books, *nbBooks, searchTitle);
+        switch (choice) {
+            case 1:
+                addBook(books, nbBooks);
+                break;
 
-            if (b) {
-                printf("\nBook found: %s by %s\n", b->title, b->author);
-                printf("1. Modify\n2. Delete\n0. Cancel\n");
-                int action;
-                scanf("%d", &action);
-                getchar();
+            case 2:
+                searchBook(books, *nbBooks, 0); // mode admin
+                break;
 
-                if (action == 1) modifyBook(books, *nbBooks, b->id);
-                else if (action == 2) deleteBook(books, nbBooks, b->id);
-            } else {
-                printf("Not found.\n");
-            }
+            default:
+                printf("Option invalide.\n");
         }
     }
 }
 
 void userMenu(Book books[], int nbBooks) {
     int choice;
-    char searchTitle[100];
 
     while (1) {
         displayAllBooks(books, nbBooks);
 
-        printf("=== USER MENU ===\n");
-        printf("1. Search Book\n");
-        printf("0. Exit\n");
-        printf("Choice: ");
+        printf("=== MENU UTILISATEUR ===\n");
+        printf("1. Rechercher un livre\n");
+        printf("0. Quitter\n");
+        printf("Choix : ");
         scanf("%d", &choice);
         getchar();
 
-        if (choice == 0) break;
+        if (choice == 0) {
+            printf("Déconnexion...\n");
+            break;
+        }
 
-        if (choice == 1) {
-            printf("Enter title: ");
-            fgets(searchTitle, 100, stdin);
-            searchTitle[strcspn(searchTitle, "\n")] = '\0';
+        switch (choice) {
+            case 1:
+                searchBook(books, nbBooks, 1); // mode user
+                break;
 
-            Book *b = searchBookByTitle(books, nbBooks, searchTitle);
-
-            if (b) {
-                printf("\n%s — %s (%d)\n", b->title, b->author, b->year);
-            } else {
-                printf("Not found.\n");
-            }
+            default:
+                printf("Option invalide.\n");
         }
     }
 }
@@ -88,13 +77,15 @@ int main() {
     int nbBooks = 0;
     int mode;
 
-    printf("=== Login ===\n0 = Admin\n1 = User\nChoice: ");
+    printf("=== Login ===\n");
+    printf("0 = Admin\n1 = Utilisateur\n");
+    printf("Choix : ");
     scanf("%d", &mode);
     getchar();
 
     if (mode == 0) adminMenu(books, &nbBooks);
     else userMenu(books, nbBooks);
 
-    printf("\nBye!\n");
+    printf("\nMerci, à bientôt ! 👋\n");
     return 0;
 }
