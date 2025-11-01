@@ -9,13 +9,13 @@
 #include "users.h"
 #include "library.h"
 
-int chargerLivres(Book tabBooks[], int max);
-int sauvegarderLivres(Book tabBooks[], int nb);
+int chargerLivres(Book books[], int max);
+int sauvegarderLivres(Book books[], int nb);
 
-int chargerUtilisateurs(User tabUsers[], int max);
-int sauvegarderUtilisateurs(User tabUsers[], int nb);
+int chargerUtilisateurs(User users[], int max);
+int sauvegarderUtilisateurs(User users[], int nb);
 
-int chargerEmprunts(Loan tabLoans[], int max);
-int sauvegarderEmprunts(Loan tabLoans[], int nb);
+int chargerEmprunts(Loan loans[], int max);
+int sauvegarderEmprunts(Loan loans[], int nb);
 
 #endif //PROJECT_BIBLIOTHEQUE_NUMERIQUE_STOCKAGE_H
