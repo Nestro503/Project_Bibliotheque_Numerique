@@ -2,6 +2,8 @@
 #include "library.h"
 #include "books.h"
 #include "books.c"
+#include "stockage.h"
+
 
 #include <stdio.h>
 #include <string.h>
@@ -18,13 +20,13 @@ void adminMenu(Book books[], int *nbBooks) {
         printf("=== MENU ADMIN ===\n");
         printf("1. Ajouter un livre\n");
         printf("2. Rechercher un livre\n");
-        printf("0. Déconnexion\n");
+        printf("0. Deconnexion\n");
         printf("Choix : ");
         scanf("%d", &choice);
         getchar();
 
         if (choice == 0) {
-            printf("Déconnexion...\n");
+            printf("Deconnexion...\n");
             break;
         }
 
@@ -57,7 +59,7 @@ void userMenu(Book books[], int nbBooks) {
         getchar();
 
         if (choice == 0) {
-            printf("Déconnexion...\n");
+            printf("Deconnexion...\n");
             break;
         }
 
@@ -77,6 +79,10 @@ int main() {
     int nbBooks = 0;
     int mode;
 
+
+    nbBooks = chargerLivres(books, MAX_BOOKS);
+
+
     printf("=== Login ===\n");
     printf("0 = Admin\n1 = Utilisateur\n");
     printf("Choix : ");
@@ -86,6 +92,8 @@ int main() {
     if (mode == 0) adminMenu(books, &nbBooks);
     else userMenu(books, nbBooks);
 
+
+    sauvegarderLivres(books, nbBooks);
     printf("\nMerci, à bientôt ! 👋\n");
     return 0;
 }
