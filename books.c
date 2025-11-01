@@ -1,6 +1,5 @@
 #include "books.h"
 
-// Helper function to generate a unique ID
 int generateBookID(Book books[], int nbBooks) {
     int maxID = 0;
     for (int i = 0; i < nbBooks; i++) {
@@ -9,92 +8,161 @@ int generateBookID(Book books[], int nbBooks) {
     return maxID + 1;
 }
 
-// Add a new book
+int validateDate(char *date) {
+    int j, m, a;
+
+    if (sscanf(date, "%d/%d/%d", &j, &m, &a) != 3) return 0;
+
+    time_t t = time(NULL);
+    struct tm now = *localtime(&t);
+    int currentYear = now.tm_year + 1900;
+
+    if (a < 1000 || a > currentYear + 1) return 0;
+    if (m < 1 || m > 12) return 0;
+    if (j < 1 || j > 31) return 0;
+
+    // Mois avec 30 jours
+    if ((m==4 || m==6 || m==9 || m==11) && j > 30) return 0;
+
+    // Février (pas check bissextile pour simplifier, ok pour projet)
+    if (m == 2 && j > 28) return 0;
+
+    return 1;
+}
+
+int validateISBN(char *isbn) {
+    if (strlen(isbn) != 13) return 0;
+    for (int i = 0; i < 13; i++) {
+        if (!isdigit(isbn[i])) return 0;
+    }
+    return 1;
+}
+
+int validateCategory(char *cat) {
+    const char *validCategories[] = {
+            "roman", "bd", "manga", "biographie"
+    };
+    int size = sizeof(validCategories) / sizeof(validCategories[0]);
+
+    for (int i = 0; i < size; i++) {
+        if (strcmp(cat, validCategories[i]) == 0)
+            return 1;
+    }
+    return 0;
+}
+
 void addBook(Book books[], int *nbBooks) {
     Book newBook;
     newBook.id = generateBookID(books, *nbBooks);
 
-    printf("Enter title: ");
-    fgets(newBook.title, 100, stdin);
-    newBook.title[strcspn(newBook.title, "\n")] = '\0'; // Remove newline
+    // Titre
+    while (1) {
+        printf("Titre (1-20 caracteres) : ");
+        fgets(newBook.title, 100, stdin);
+        newBook.title[strcspn(newBook.title, "\n")] = '\0';
 
-    printf("Enter author: ");
-    fgets(newBook.author, 100, stdin);
-    newBook.author[strcspn(newBook.author, "\n")] = '\0';
+        if (strlen(newBook.title) >= 1 && strlen(newBook.title) <= 20) break;
+        printf("Erreur : le titre doit contenir 1 a 20 caracteres.\n\n");
+    }
 
-    printf("Enter category: ");
-    fgets(newBook.category, 50, stdin);
-    newBook.category[strcspn(newBook.category, "\n")] = '\0';
+    // Auteur
+    while (1) {
+        printf("Auteur (1-20 caracteres) : ");
+        fgets(newBook.author, 100, stdin);
+        newBook.author[strcspn(newBook.author, "\n")] = '\0';
 
-    printf("Enter ISBN: ");
-    fgets(newBook.isbn, 20, stdin);
-    newBook.isbn[strcspn(newBook.isbn, "\n")] = '\0';
+        if (strlen(newBook.author) >= 1 && strlen(newBook.author) <= 20) break;
+        printf("Erreur : l'auteur doit contenir 1 a 20 caracteres.\n\n");
+    }
 
-    printf("Enter year: ");
-    scanf("%d", &newBook.year);
-    getchar(); // remove leftover newline
+    // Categorie
+    while (1) {
+        printf("Categorie (roman, bd, manga, science, fantasy, histoire, biographie) : ");
+        fgets(newBook.category, 50, stdin);
+        newBook.category[strcspn(newBook.category, "\n")] = '\0';
 
-    newBook.status = 1; // available
+        if (validateCategory(newBook.category)) break;
+        printf("Erreur : categorie invalide. Choisissez parmis la liste.\n\n");
+    }
+
+    // ISBN
+    while (1) {
+        printf("ISBN (13 chiffres) : ");
+        fgets(newBook.isbn, 20, stdin);
+        newBook.isbn[strcspn(newBook.isbn, "\n")] = '\0';
+
+        if (validateISBN(newBook.isbn)) break;
+        printf("Format ISBN invalide. Exemple : 9781234567890\n\n");
+    }
+
+    // Date
+    char date[20];
+    while (1) {
+        printf("Date (jj/mm/aaaa) : ");
+        fgets(date, 20, stdin);
+        date[strcspn(date, "\n")] = '\0';
+
+        if (validateDate(date)) break;
+        printf("Date invalide. Format attendu jj/mm/aaaa, ex : 25/11/2024\n\n");
+    }
+
+    // On récupère juste l'année du champ date
+    int j, m, a;
+    sscanf(date, "%d/%d/%d", &j, &m, &a);
+    newBook.year = a;
+
+    newBook.status = 0;
     newBook.nbLoans = 0;
 
     books[*nbBooks] = newBook;
     (*nbBooks)++;
 
-    printf("Book added successfully! ID = %d\n", newBook.id);
+    printf("\n Livre ajoute avec succes ! (ID %d)\n\n", newBook.id);
 }
 
-// Display all books
-void displayBooks(Book books[], int nbBooks) {
+
+void displayAllBooks(Book books[], int nbBooks) {
+
     if (nbBooks == 0) {
-        printf("No books available.\n");
+        printf("\nLa bibliotheque est vide.\n\n");
         return;
     }
-    printf("List of books:\n");
+
+    printf("\n==================== BIBLIOTHEQUE ====================\n\n");
+
+    // Table headers
+    printf("%-5s | %-25s | %-20s | %-15s | %-12s | %-10s | %-10s\n",
+           "ID", "Titre", "Auteur", "ISBN", "Categorie", "Statut", "Emprunts");
+    printf("--------------------------------------------------------------------------------------------------------------\n");
+
+    // Books rows
     for (int i = 0; i < nbBooks; i++) {
-        printf("ID: %d | Title: %s | Author: %s | Year: %d | Status: %s\n",
-               books[i].id, books[i].title, books[i].author,
-               books[i].year, books[i].status ? "Available" : "Borrowed");
+        printf("%-5d | %-25s | %-20s | %-15s | %-12s | %-10s | %-10d\n",
+               books[i].id,
+               books[i].title,
+               books[i].author,
+               books[i].isbn,
+               books[i].category,
+               books[i].status ? "Disponible" : "Emprunte",
+               books[i].nbLoans
+        );
     }
+
+    printf("\n=======================================================\n\n");
 }
 
-// Search book by title
+
+// Search by title
 Book* searchBookByTitle(Book books[], int nbBooks, const char* title) {
     for (int i = 0; i < nbBooks; i++) {
         if (strcmp(books[i].title, title) == 0) {
             return &books[i];
         }
     }
-    return NULL; // not found
+    return NULL;
 }
 
-// Search book by ISBN
-Book* searchBookByISBN(Book books[], int nbBooks, const char* isbn) {
-    for (int i = 0; i < nbBooks; i++) {
-        if (strcmp(books[i].isbn, isbn) == 0) {
-            return &books[i];
-        }
-    }
-    return NULL; // not found
-}
-
-// Delete a book by ID
-void deleteBook(Book books[], int *nbBooks, int id) {
-    int found = 0;
-    for (int i = 0; i < *nbBooks; i++) {
-        if (books[i].id == id) {
-            found = 1;
-            for (int j = i; j < *nbBooks - 1; j++) {
-                books[j] = books[j+1];
-            }
-            (*nbBooks)--;
-            printf("Book with ID %d deleted.\n", id);
-            break;
-        }
-    }
-    if (!found) printf("Book with ID %d not found.\n", id);
-}
-
-// Modify a book by ID
+// Modify book
 void modifyBook(Book books[], int nbBooks, int id) {
     Book* b = NULL;
     for (int i = 0; i < nbBooks; i++) {
@@ -108,42 +176,67 @@ void modifyBook(Book books[], int nbBooks, int id) {
         return;
     }
 
-    printf("Enter new title (current: %s): ", b->title);
-    fgets(b->title, 100, stdin);
-    b->title[strcspn(b->title, "\n")] = '\0';
+    printf("Enter new title (%s): ", b->title);
+    fgets(b->title, 100, stdin); b->title[strcspn(b->title, "\n")] = '\0';
 
-    printf("Enter new author (current: %s): ", b->author);
-    fgets(b->author, 100, stdin);
-    b->author[strcspn(b->author, "\n")] = '\0';
+    printf("Enter new author (%s): ", b->author);
+    fgets(b->author, 100, stdin); b->author[strcspn(b->author, "\n")] = '\0';
 
-    printf("Enter new category (current: %s): ", b->category);
-    fgets(b->category, 50, stdin);
-    b->category[strcspn(b->category, "\n")] = '\0';
+    printf("Enter new category (%s): ", b->category);
+    fgets(b->category, 50, stdin); b->category[strcspn(b->category, "\n")] = '\0';
 
-    printf("Enter new ISBN (current: %s): ", b->isbn);
-    fgets(b->isbn, 20, stdin);
-    b->isbn[strcspn(b->isbn, "\n")] = '\0';
+    printf("Enter new ISBN (%s): ", b->isbn);
+    fgets(b->isbn, 20, stdin); b->isbn[strcspn(b->isbn, "\n")] = '\0';
 
-    printf("Enter new year (current: %d): ", b->year);
+    printf("Enter new year (%d): ", b->year);
     scanf("%d", &b->year);
     getchar();
 
-    printf("Book modified successfully.\n");
+    printf("\nBook updated!\n\n");
 }
 
-// Sort books: criterion 0 = title, 1 = year
-void sortBooks(Book books[], int nbBooks, int criterion) {
-    for (int i = 0; i < nbBooks - 1; i++) {
-        for (int j = i + 1; j < nbBooks; j++) {
-            int swap = 0;
-            if (criterion == 0 && strcmp(books[i].title, books[j].title) > 0) swap = 1;
-            if (criterion == 1 && books[i].year > books[j].year) swap = 1;
-            if (swap) {
-                Book temp = books[i];
-                books[i] = books[j];
-                books[j] = temp;
-            }
+void deleteBook(Book books[], int *nbBooks, int id) {
+    int index = -1;
+
+    for (int i = 0; i < *nbBooks; i++) {
+        if (books[i].id == id) {
+            index = i;
+            break;
         }
     }
-    printf("Books sorted successfully.\n");
+
+    if (index == -1) {
+        printf("Livre introuvable.\n");
+        return;
+    }
+
+    // Empêcher suppression si le livre est emprunté
+    if (books[index].status == 1) {
+        printf("Impossible de supprimer ce livre : il est actuellement emprunte.\n");
+        printf("Veuillez attendre son retour avant suppression.\n\n");
+        return;
+    }
+
+    // Demande de confirmation
+    printf("\nEtes-vous sur de vouloir supprimer le livre suivant ?\n");
+    printf("ID: %d | %s %s\n", books[index].id, books[index].title, books[index].author);
+    printf("Cette action est definitive. (y/n) : ");
+
+    char confirm;
+    scanf(" %c", &confirm);
+    getchar(); // nettoyer buffer
+
+    if (confirm != 'y' && confirm != 'Y') {
+        printf("Suppression annulee. Aucun changement effectue.\n\n");
+        return;
+    }
+
+    // Suppression
+    for (int j = index; j < *nbBooks - 1; j++) {
+        books[j] = books[j + 1];
+    }
+    (*nbBooks)--;
+
+    printf("Livre supprime avec succes.\n");
+    printf("Le livre n'apparaitra plus dans la bibliotheque ni dans les recherches.\n\n");
 }

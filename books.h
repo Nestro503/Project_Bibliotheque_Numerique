@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+#include <ctype.h>
 
 typedef struct {
     int id;
@@ -12,17 +14,16 @@ typedef struct {
     char category[50];
     char isbn[20];
     int year;
-    int status;             // 1 = available, 0 = borrowed
+    int status;
     int nbLoans;
 } Book;
 
 // Function prototypes
 void addBook(Book books[], int *nbBooks);
-void displayBooks(Book books[], int nbBooks);
+void displayAllBooks(Book books[], int nbBooks);
 Book* searchBookByTitle(Book books[], int nbBooks, const char* title);
-Book* searchBookByISBN(Book books[], int nbBooks, const char* isbn);
 void deleteBook(Book books[], int *nbBooks, int id);
 void modifyBook(Book books[], int nbBooks, int id);
-void sortBooks(Book books[], int nbBooks, int criterion); // 0 = by title, 1 = by year
+int generateBookID(Book books[], int nbBooks);
 
-#endif //PROJECT_BIBLIOTHEQUE_NUMERIQUE_BOOKS_H
+#endif
