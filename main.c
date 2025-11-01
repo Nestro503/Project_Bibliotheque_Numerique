@@ -9,6 +9,9 @@
 #include <string.h>
 
 #define MAX_BOOKS 100
+#define MAX_USERS 100
+#define MAX_LOANS 100
+
 
 // 0 = admin, 1 = user
 void adminMenu(Book books[], int *nbBooks) {
@@ -76,12 +79,22 @@ void userMenu(Book books[], int nbBooks) {
 
 int main() {
     Book books[MAX_BOOKS];
+    User users[MAX_USERS];
+    Loan loans[MAX_LOANS];
+
+
+
+
+
     int nbBooks = 0;
+    int nbUsers = 0;
+    int nbLoans = 0;
+
     int mode;
 
-
+    nbUsers = chargerUtilisateurs(users, MAX_USERS);
     nbBooks = chargerLivres(books, MAX_BOOKS);
-
+    nbLoans = chargerEmprunts(loans, MAX_LOANS);
 
     printf("=== Login ===\n");
     printf("0 = Admin\n1 = Utilisateur\n");
@@ -94,6 +107,11 @@ int main() {
 
 
     sauvegarderLivres(books, nbBooks);
-    printf("\nMerci, à bientôt ! 👋\n");
+    sauvegarderUtilisateurs(users, nbUsers);
+    sauvegarderEmprunts(loans, nbLoans);
+
+
+
+    printf("\nMerci, a bientot ! \n");
     return 0;
 }
