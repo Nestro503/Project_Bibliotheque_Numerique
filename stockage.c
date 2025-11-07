@@ -1,7 +1,3 @@
-//
-// Created by CAMFI on 01/11/2025.
-//
-
 
 /* Format par ligne :
    id;title;author;category;isbn;year;status;nbLoans
@@ -9,8 +5,6 @@
 
 
 #include "stockage.h"
-#include <stdio.h>
-#include <string.h>
 
 #define BOOKS_FILE "txt/books.txt"
 #define USERS_FILE "txt/users.txt"

@@ -25,7 +25,7 @@ int validateDate(char *date) {
     // Mois avec 30 jours
     if ((m==4 || m==6 || m==9 || m==11) && j > 30) return 0;
 
-    // Février (pas check bissextile pour simplifier, ok pour projet)
+    // Fevrier (pas check bissextile pour simplifier, ok pour projet)
     if (m == 2 && j > 28) return 0;
 
     return 1;
@@ -107,7 +107,7 @@ void addBook(Book books[], int *nbBooks) {
         printf("Date invalide. Format attendu jj/mm/aaaa, ex : 25/11/2024\n\n");
     }
 
-    // On récupère juste l'année du champ date
+    // On recupère juste l'annee du champ date
     int j, m, a;
     sscanf(date, "%d/%d/%d", &j, &m, &a);
     newBook.year = a;
@@ -144,7 +144,7 @@ void displayAllBooks(Book books[], int nbBooks) {
                books[i].author,
                books[i].isbn,
                books[i].category,
-               books[i].status ? "Disponible" : "Emprunte",
+               books[i].status ? "Emprunte" : "Disponible",
                books[i].nbLoans
         );
     }
@@ -162,17 +162,17 @@ Book* searchBook(Book books[], int nbBooks, int mode) {
     printf("1. Titre\n");
     printf("2. Auteur\n");
     printf("3. ISBN\n");
-    printf("4. Catégorie\n");
+    printf("4. Categorie\n");
     printf("Votre choix : ");
     scanf("%d", &choice);
     getchar();
 
-    printf("Entrez le mot-clé : ");
+    printf("Entrez le mot-cle : ");
     fgets(input, 100, stdin);
     input[strcspn(input, "\n")] = '\0';
 
     Book *found = NULL;
-    printf("\nRésultats :\n");
+    printf("\nResultats :\n");
 
     for (int i = 0; i < nbBooks; i++) {
         int match = 0;
@@ -189,7 +189,7 @@ Book* searchBook(Book books[], int nbBooks, int mode) {
             printf("-----------------------------------------------\n");
             printf("ID : %d\nTitre : %s\nAuteur : %s\nISBN : %s\nCategorie : %s\nStatut : %s\nEmprunts : %d\n",
                    books[i].id, books[i].title, books[i].author, books[i].isbn,
-                   books[i].category, books[i].status ? "Disponible" : "Emprunté",
+                   books[i].category, books[i].status ? "Emprunte" : "Disponible",
                    books[i].nbLoans);
 
             found = &books[i];
@@ -289,7 +289,7 @@ void deleteBook(Book books[], int *nbBooks, int id) {
         return;
     }
 
-    // Empêcher suppression si le livre est emprunté
+    // Empêcher suppression si le livre est emprunte
     if (books[index].status == 1) {
         printf("Impossible de supprimer ce livre : il est actuellement emprunte.\n");
         printf("Veuillez attendre son retour avant suppression.\n\n");

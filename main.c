@@ -2,10 +2,6 @@
 #include "books.h"
 #include "stockage.h"
 
-
-#include <stdio.h>
-#include <string.h>
-
 #define MAX_BOOKS 100
 #define MAX_USERS 100
 #define MAX_LOANS 100
@@ -79,9 +75,6 @@ int main() {
     Book books[MAX_BOOKS];
     User users[MAX_USERS];
     Loan loans[MAX_LOANS];
-
-
-
 
 
     int nbBooks = 0;

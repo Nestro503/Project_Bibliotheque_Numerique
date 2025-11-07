@@ -18,12 +18,16 @@ typedef struct {
     int nbLoans;
 } Book;
 
+
 // Function prototypes
 void addBook(Book books[], int *nbBooks);
+int generateBookID(Book books[], int nbBooks);
+
 void displayAllBooks(Book books[], int nbBooks);
-Book* searchBookByTitle(Book books[], int nbBooks, const char* title);
+
+Book* searchBook(Book books[], int nbBooks, int mode);
 void deleteBook(Book books[], int *nbBooks, int id);
 void modifyBook(Book books[], int nbBooks, int id);
-int generateBookID(Book books[], int nbBooks);
+
 
 #endif
