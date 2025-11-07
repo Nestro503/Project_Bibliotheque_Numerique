@@ -1,7 +1,5 @@
-#include "library.c"
 #include "library.h"
 #include "books.h"
-#include "books.c"
 #include "stockage.h"
 
 

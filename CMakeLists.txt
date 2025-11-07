@@ -3,6 +3,9 @@ project(Project_Bibliotheque_Numerique C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Project_Bibliotheque_Numerique main.c
+add_executable(Project_Bibliotheque_Numerique
+        main.c
+        books.c
+        library.c
         stockage.c
-        stockage.h)
+        )
