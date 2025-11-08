@@ -77,11 +77,7 @@ int sauvegarderLivres(Book books[], int nb) {
     return nb;
 }
 
-
-
 // Users
-
-
 int chargerUtilisateurs(User users[], int max) {
     FILE *f = fopen(USERS_FILE, "r");
     if (!f) return 0;
