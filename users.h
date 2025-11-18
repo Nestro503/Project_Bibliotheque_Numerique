@@ -2,13 +2,17 @@
 #ifndef PROJECT_BIBLIOTHEQUE_NUMERIQUE_USERS_H
 #define PROJECT_BIBLIOTHEQUE_NUMERIQUE_USERS_H
 
+#define MAX_EMPRUNTS_PAR_USER 3
+
 typedef struct {
     int id;                 // Identifiant unique de l’utilisateur
-    char name[50];          // Nom
-    char surname[50];       // Prénom
-    char mail[100];         // Adresse e-mail
+    char name[20];          // Nom
+    char surname[20];       // Prénom
+    char mail[70];         // Adresse e-mail
     char idStudent[20];     // Identifiant étudiant
     int nbStudentLoans;     // Nombre de livres empruntés
+    int livresEmpruntes[MAX_EMPRUNTS_PAR_USER];
+    /*time_t datesEmprunt[MAX_EMPRUNTS_PAR_USER];*/
 } User;
 
 // --- Fonctions pour l’administrateur ---

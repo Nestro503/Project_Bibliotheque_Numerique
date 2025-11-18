@@ -3,18 +3,41 @@
 #include <stdio.h>
 #include <string.h>
 
+void lireChaineValidee(char *buffer, int tailleMax, const char *invite, int (*validator)(const char *), const char *msgErreur) {
+    while (1) {
+        printf("%s", invite);
+        fgets(buffer, tailleMax, stdin);
+        buffer[strcspn(buffer, "\n")] = '\0';
+
+        if (strlen(buffer) == 0) {
+            printf("Erreur : la valeur ne peut pas etre vide.\n");
+            continue;
+        }
+        if (validator && !validator(buffer)) {
+            printf("Erreur : %s\n", msgErreur);
+            continue;
+        }
+        break;
+    }
+}
+
+int valideEmail(const char *mail) {
+    return strchr(mail, '@') != NULL;
+}
 
 //Fonction Admin
 void ajouterUtilisateur(User *users, int *nbUsers) {
-    printf("\n=== Ajouter un utilisateur ===\n");
-    users[*nbUsers].id = *nbUsers + 1;
-    printf("Nom : ");        scanf("%s", users[*nbUsers].name);
-    printf("Prenom : ");     scanf("%s", users[*nbUsers].surname);
-    printf("ID etudiant : "); scanf("%s", users[*nbUsers].idStudent);
-    printf("Email : ");      scanf("%s", users[*nbUsers].mail);
+    User newUser;
+    newUser.id = *nbUsers + 1;
 
-    users[*nbUsers].nbStudentLoans = 0;  // aucun emprunt au début
+    lireChaineValidee(newUser.name, sizeof(newUser.name), "Nom (max 20 caractères) : ", NULL, "");
+    lireChaineValidee(newUser.surname, sizeof(newUser.surname), "Prenom (max 20 caractères) : ", NULL, "");
+    lireChaineValidee(newUser.idStudent, sizeof(newUser.idStudent), "ID etudiant (max 20 caractères) : ", NULL, "");
+    lireChaineValidee(newUser.mail, sizeof(newUser.mail), "Email (max 70 caractères, doit contenir '@') : ", valideEmail, "doit contenir '@'");
 
+    newUser.nbStudentLoans = 0;
+
+    users[*nbUsers] = newUser;
     (*nbUsers)++;
     printf("Utilisateur ajoute !\n");
 }
@@ -37,18 +60,19 @@ void afficherUtilisateurs(User *users, int nbUsers) {
 void modifierUtilisateur(User *users, int nbUsers) {
     char idRecherche[20];
     printf("\nID etudiant a modifier : ");
-    scanf("%s", idRecherche);
+    fgets(idRecherche, sizeof(idRecherche), stdin);
+    idRecherche[strcspn(idRecherche, "\n")] = '\0';
 
     for (int i = 0; i < nbUsers; i++) {
         if (strcmp(users[i].idStudent, idRecherche) == 0) {
-            printf("Nouveau nom : ");     scanf("%s", users[i].name);
-            printf("Nouveau prenom : ");  scanf("%s", users[i].surname);
-            printf("Nouvel email : ");    scanf("%s", users[i].mail);
-            printf("Utilisateur modifier !\n");
+            lireChaineValidee(users[i].name, sizeof(users[i].name), "Nouveau nom (max 20 caracteres) : ", NULL, "");
+            lireChaineValidee(users[i].surname, sizeof(users[i].surname), "Nouveau prenom (max 20 caracteres) : ", NULL, "");
+            lireChaineValidee(users[i].mail, sizeof(users[i].mail), "Nouvel email (max 70 caracteres, doit contenir '@') : ", valideEmail, "doit contenir '@'");
+
+            printf("Utilisateur modifie !\n");
             return;
         }
     }
-
     printf("Aucun utilisateur trouve avec cet ID.\n");
 }
 
@@ -77,16 +101,20 @@ void supprimerUtilisateur(User *users, int *nbUsers) {
 int creerCompte(User *users, int *nbUsers) {
     printf("\n=== Creer un compte ===\n");
 
-    users[*nbUsers].id = *nbUsers + 1;
+    User newUser;
+    newUser.id = *nbUsers + 1;
 
-    printf("Nom : ");        scanf("%s", users[*nbUsers].name);
-    printf("Prenom : ");     scanf("%s", users[*nbUsers].surname);
-    printf("ID etudiant : "); scanf("%s", users[*nbUsers].idStudent);
-    printf("Email : ");      scanf("%s", users[*nbUsers].mail);
+    lireChaineValidee(newUser.name, sizeof(newUser.name), "Nom (max 20 caracteres) : ", NULL, "");
+    lireChaineValidee(newUser.surname, sizeof(newUser.surname), "Prenom (max 20 caracteres) : ", NULL, "");
+    lireChaineValidee(newUser.idStudent, sizeof(newUser.idStudent), "ID etudiant (max 20 caracteres) : ", NULL, "");
+    lireChaineValidee(newUser.mail, sizeof(newUser.mail), "Email (max 70 caracteres, doit contenir '@') : ", valideEmail, "doit contenir '@'");
 
-    users[*nbUsers].nbStudentLoans = 0;
+    newUser.nbStudentLoans = 0;
 
+    users[*nbUsers] = newUser;
     (*nbUsers)++;
+
+    printf("Compte créé avec succès !\n");
     return *nbUsers - 1;
 }
 
@@ -109,9 +137,9 @@ int connexionUtilisateur(User *users, int nbUsers) {
 
 void modifierMonCompte(User *users, int monIndex) {
     printf("\n=== Modifier mon compte ===\n");
-    printf("Nouveau nom : ");     scanf("%s", users[monIndex].name);
-    printf("Nouveau prenom : ");  scanf("%s", users[monIndex].surname);
-    printf("Nouvel email : ");    scanf("%s", users[monIndex].mail);
+    lireChaineValidee(users[monIndex].name, sizeof(users[monIndex].name), "Nouveau nom (max 20 caracteres) : ", NULL, "");
+    lireChaineValidee(users[monIndex].surname, sizeof(users[monIndex].surname), "Nouveau prenom (max 20 caracteres) : ", NULL, "");
+    lireChaineValidee(users[monIndex].mail, sizeof(users[monIndex].mail), "Nouvel email (max 70 caracteres, doit contenir '@') : ", valideEmail, "doit contenir '@'");
     printf("Compte mis a jour !\n");
 }
 
@@ -134,3 +162,4 @@ int connexionAdmin() {
 
     return (strcmp(login, "admin") == 0 && strcmp(motDePasse, "admin123") == 0);
 }
+

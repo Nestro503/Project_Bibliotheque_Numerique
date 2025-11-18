@@ -11,7 +11,7 @@
 #define MAX_LOANS 100
 
 // Menu administrateur
-void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers) {
+void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers, Loan loans[], int *nbLoans) {
     int choice;
 
     do {
@@ -22,6 +22,7 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers) {
         printf("4. Ajouter un utilisateur\n");
         printf("5. Modifier un utilisateur\n");
         printf("6. Supprimer un utilisateur\n");
+        printf("7. Emprunts en retard\n");
         printf("0. Deconnexion\n");
         printf("Choix : ");
         scanf("%d", &choice);
@@ -51,6 +52,19 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers) {
                 supprimerUtilisateur(users, nbUsers);
                 break;
 
+            case 7: {
+                // nbLoans est un int* dans ce menu -> il faut le déréférencer
+                mettreAJourRetards(loans, *nbLoans, NULL);
+                printf("=== Emprunts en retard ===\n");
+                for (int i = 0; i < *nbLoans; i++) {
+                    if (loans[i].late == 1 && loans[i].dateReturn[0] == '\0') {
+                        printf("#%d | Livre %d | Utilisateur %d | depuis %s\n",
+                               loans[i].idLoan, loans[i].idBook, loans[i].idUser, loans[i].dateLoan);
+                    }
+                }
+                break;
+            }
+
             case 0:
                 printf("Deconnexion...\n");
                 break;
@@ -61,10 +75,8 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers) {
     } while (choice != 0);
 }
 
-
-
-//Menu utilisateur
-void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monIndex) {
+// Menu utilisateur
+void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monIndex, Loan loans[], int *nbLoans) {
     int choice;
 
     do {
@@ -72,6 +84,9 @@ void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monInde
         printf("1. Rechercher un livre\n");
         printf("2. Modifier mon compte\n");
         printf("3. Supprimer mon compte\n");
+        printf("4. Emprunter un livre\n");
+        printf("5. Rendre un livre\n");
+        printf("6. Mes emprunts et retards\n");
         printf("0. Deconnexion\n");
         printf("Choix : ");
         scanf("%d", &choice);
@@ -89,6 +104,45 @@ void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monInde
                 supprimerMonCompte(users, nbUsers, &monIndex);
                 break;
 
+            case 4: {
+                int idBook;
+                printf("ID livre a emprunter: ");
+                scanf("%d", &idBook);
+                // nbLoans est un int* dans ce menu -> on passe nbLoans tel quel (int*)
+                int code = enregistrerEmprunt(loans, nbLoans, books, nbBooks, users, *nbUsers, idBook, users[monIndex].id, NULL);
+                if (code == 0) printf("Emprunt enregistre.\n");
+                else if (code == -2) printf("Livre déjà emprunte.\n");
+                else if (code == -3) printf("Limite de prets atteinte (max 3).\n");
+                else printf("Erreur.\n");
+                break;
+            }
+
+            case 5: {
+                int idBook;
+                printf("ID livre a rendre: ");
+                scanf("%d", &idBook);
+                // enregistrerRetour attend un int nbLoans -> passer *nbLoans
+                int code = enregistrerRetour(loans, *nbLoans, books, nbBooks, users, *nbUsers, idBook, NULL);
+                if (code == 0) printf("Retour enregistre.\n");
+                else printf("Erreur: pas d'emprunt actif pour ce livre.\n");
+                break;
+            }
+
+            case 6: {
+                // Mise à jour des retards du jour
+                mettreAJourRetards(loans, *nbLoans, NULL);
+                printf("=== Mes emprunts ===\n");
+                for (int i = 0; i < *nbLoans; i++) {
+                    if (loans[i].idUser == users[monIndex].id) {
+                        printf("#%d | Livre %d | du %s | retour: %s | %s\n",
+                               loans[i].idLoan, loans[i].idBook, loans[i].dateLoan,
+                               loans[i].dateReturn[0] ? loans[i].dateReturn : "(en cours)",
+                               loans[i].late ? "EN RETARD" : "OK");
+                    }
+                }
+                break;
+            }
+
             case 0:
                 printf("Deconnexion...\n");
                 break;
@@ -99,11 +153,11 @@ void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monInde
 
     } while (choice != 0 && monIndex != -1);
 }
+
 int main() {
     Book books[MAX_BOOKS];
     User users[MAX_USERS];
     Loan loans[MAX_LOANS];
-
 
     int nbBooks = 0;
     int nbUsers = 0;
@@ -130,7 +184,6 @@ int main() {
         if (choix == 0) break;
 
         switch (choix) {
-
             case 1:
                 monIndex = connexionUtilisateur(users, nbUsers);
                 if (monIndex == -1) {
@@ -142,7 +195,8 @@ int main() {
                     else
                         continue;
                 }
-                userMenu(books, nbBooks, users, &nbUsers, monIndex);
+                // Passer loans et &nbLoans aux menus
+                userMenu(books, nbBooks, users, &nbUsers, monIndex, loans, &nbLoans);
                 break;
 
             case 2:
@@ -152,7 +206,8 @@ int main() {
 
             case 3:
                 if (connexionAdmin())
-                    adminMenu(books, &nbBooks, users, &nbUsers);
+                    // Passer loans et &nbLoans aux menus
+                    adminMenu(books, &nbBooks, users, &nbUsers, loans, &nbLoans);
                 else
                     printf("Identifiants incorrects.\n");
                 break;
@@ -165,8 +220,6 @@ int main() {
     sauvegarderLivres(books, nbBooks);
     sauvegarderUtilisateurs(users, nbUsers);
     sauvegarderEmprunts(loans, nbLoans);
-
-
 
     printf("\nMerci, a bientot ! \n");
     return 0;
