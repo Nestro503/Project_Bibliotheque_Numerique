@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <string.h>
 
 #include "library.h"
 #include "books.h"
@@ -15,6 +13,8 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers, Loan loan
     int choice;
 
     do {
+        displayAllBooks(books, *nbBooks);
+
         printf("\n===== MENU ADMIN =====\n");
         printf("1. Ajouter un livre\n");
         printf("2. Rechercher / Modifier / Supprimer un livre\n");
@@ -29,18 +29,22 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers, Loan loan
 
         switch (choice) {
             case 1:
+                getchar();
                 addBook(books, nbBooks);
                 break;
 
             case 2:
+                getchar();
                 searchBook(books, *nbBooks, 0);
                 break;
 
             case 3:
+                getchar();
                 afficherUtilisateurs(users, *nbUsers);
                 break;
 
             case 4:
+                getchar();
                 ajouterUtilisateur(users, nbUsers);
                 break;
 
@@ -80,6 +84,8 @@ void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monInde
     int choice;
 
     do {
+        displayAllBooks(books, nbBooks);
+
         printf("\n===== MENU UTILISATEUR =====\n");
         printf("1. Rechercher un livre\n");
         printf("2. Modifier mon compte\n");

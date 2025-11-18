@@ -41,7 +41,7 @@ int validateISBN(char *isbn) {
 
 int validateCategory(char *cat) {
     const char *validCategories[] = {
-            "roman", "bd", "manga", "biographie"
+            "roman", "bd", "manga", "biographie", "science", "fantasy", "histoire"
     };
     int size = sizeof(validCategories) / sizeof(validCategories[0]);
 
@@ -78,7 +78,9 @@ void addBook(Book books[], int *nbBooks) {
 
     // Categorie
     while (1) {
-        printf("Categorie (roman, bd, manga, science, fantasy, histoire, biographie) : ");
+        printf("Categorie, parmi les suivantes :\n");
+        printf("   roman, bd, manga, science, fantasy, histoire, biographie\n");
+        printf("Votre choix : ");
         fgets(newBook.category, 50, stdin);
         newBook.category[strcspn(newBook.category, "\n")] = '\0';
 
