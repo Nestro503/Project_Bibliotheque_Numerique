@@ -156,35 +156,43 @@ void displayAllBooks(Book books[], int nbBooks) {
 
 
 Book* searchBook(Book books[], int nbBooks, int mode) {
-    int choice;
-    char input[100];
+    // Vider le buffer avant fgets pour éviter les sauts
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF);
 
-    printf("\n=== Recherche de livre ===\n");
-    printf("Rechercher par :\n");
-    printf("1. Titre\n");
-    printf("2. Auteur\n");
-    printf("3. ISBN\n");
-    printf("4. Categorie\n");
-    printf("Votre choix : ");
-    scanf("%d", &choice);
-    getchar();
+    char title[100] = "";
+    char author[100] = "";
+    char isbn[20] = "";
+    char category[50] = "";
 
-    printf("Entrez le mot-cle : ");
-    fgets(input, 100, stdin);
-    input[strcspn(input, "\n")] = '\0';
+    printf("\n=== Recherche multi-criteres ===\n");
+    printf("Laisser vide si critere non utilise...\n");
+
+    printf("ISBN : ");
+    fgets(isbn, 20, stdin); isbn[strcspn(isbn, "\n")] = '\0';
+
+    printf("  Titre : ");
+    fgets(title, 100, stdin); title[strcspn(title, "\n")] = '\0';
+
+    printf("    Auteur : ");
+    fgets(author, 100, stdin); author[strcspn(author, "\n")] = '\0';
+
+    printf("       Categorie : ");
+    fgets(category, 50, stdin); category[strcspn(category, "\n")] = '\0';
 
     Book *found = NULL;
+    int foundCount = 0;
+
     printf("\nResultats :\n");
 
     for (int i = 0; i < nbBooks; i++) {
         int match = 0;
 
-        switch (choice) {
-            case 1: if (strcmp(books[i].title, input) == 0) match = 1; break;
-            case 2: if (strcmp(books[i].author, input) == 0) match = 1; break;
-            case 3: if (strcmp(books[i].isbn, input) == 0) match = 1; break;
-            case 4: if (strcmp(books[i].category, input) == 0) match = 1; break;
-            default: printf("Option invalide.\n"); return NULL;
+        if ((strlen(title) == 0 || strcmp(books[i].title, title) == 0) &&
+            (strlen(author) == 0 || strcmp(books[i].author, author) == 0) &&
+            (strlen(isbn) == 0 || strcmp(books[i].isbn, isbn) == 0) &&
+            (strlen(category) == 0 || strcmp(books[i].category, category) == 0)) {
+            match = 1;
         }
 
         if (match) {
@@ -194,19 +202,20 @@ Book* searchBook(Book books[], int nbBooks, int mode) {
                    books[i].category, books[i].status ? "Emprunte" : "Disponible",
                    books[i].nbLoans);
 
-            found = &books[i];
+            found = &books[i];  // Dernier livre trouvé
+            foundCount++;
         }
     }
 
-    if (!found) {
+    if (foundCount == 0) {
         printf("\nAucun livre trouve\n\n");
         return NULL;
     }
 
     printf("-----------------------------------------------\n");
 
-    // Mode Admin
-    if (mode == 0) {
+    // Mode Admin : actions si un seul livre trouvé
+    if (mode == 0 && foundCount == 1) {
         printf("\nActions possibles :\n");
         printf("1. Modifier le livre\n");
         printf("2. Supprimer le livre\n");
@@ -218,13 +227,12 @@ Book* searchBook(Book books[], int nbBooks, int mode) {
         getchar();
 
         if (action == 1) modifyBook(books, nbBooks, found->id);
-        else if (action == 2) deleteBook(books, nbBooks, found->id);
+        else if (action == 2) deleteBook(books, &nbBooks, found->id);
         else printf("Retour au menu.\n");
     }
-
-        // Mode User
-    else {
-        if (found->status == 1) {
+        // Mode Utilisateur : emprunt si livre disponible
+    else if (mode == 1 && foundCount == 1) {
+        if (found->status == 0) {
             printf("\nCe livre est disponible\n");
             printf("Souhaitez-vous l'emprunter ? (y/n) : ");
             char c;
@@ -241,6 +249,8 @@ Book* searchBook(Book books[], int nbBooks, int mode) {
 
     return found;
 }
+
+
 
 
 // Modify book
