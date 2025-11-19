@@ -114,7 +114,7 @@ int creerCompte(User *users, int *nbUsers) {
     users[*nbUsers] = newUser;
     (*nbUsers)++;
 
-    printf("Compte créé avec succès !\n");
+    printf("Compte cree avec succes !\n");
     return *nbUsers - 1;
 }
 

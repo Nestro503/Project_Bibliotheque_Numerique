@@ -230,13 +230,7 @@ int verifierLimitePrets(User users[], int idxUser) {
 }
 
 // === Emprunter ===
-int enregistrerEmprunt(
-        Loan loans[], int *nbLoans,
-        Book books[], int nbBooks,
-        User users[], int nbUsers,
-        int idBook, int idUser,
-        const char *dateLoan
-) {
+int enregistrerEmprunt(Loan loans[], int *nbLoans, Book books[], int nbBooks, User users[], int nbUsers, int idBook, int idUser, const char *dateLoan){
     int ib = trouverLivreParId(books, nbBooks, idBook);
     int iu = trouverUtilisateurParId(users, nbUsers, idUser);
     if (ib < 0 || iu < 0) return -1; // introuvable

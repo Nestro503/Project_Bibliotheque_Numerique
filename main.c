@@ -35,7 +35,7 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers, Loan loan
 
             case 2:
                 getchar();
-                searchBook(books, *nbBooks, 0);
+                searchBook(books, *nbBooks, 0, loans, nbLoans, users, *nbUsers,-1);
                 break;
 
             case 3:
@@ -99,7 +99,7 @@ void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monInde
 
         switch (choice) {
             case 1:
-                searchBook(books, nbBooks, 1);  // mode utilisateur
+                searchBook(books, nbBooks, 1, loans, nbLoans, users, *nbUsers,users[monIndex].id);  // mode utilisateur
                 break;
 
             case 2:

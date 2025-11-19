@@ -1,6 +1,11 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <time.h>
+#include "books.h"      // contient Book + prototype searchBook
+#include "stockage.h"   // pour enregistrerEmprunt / sauvegardes
 
-#include "books.h"
-
+// Génère un ID unique (max existant + 1)
 int generateBookID(Book books[], int nbBooks) {
     int maxID = 0;
     for (int i = 0; i < nbBooks; i++) {
@@ -34,7 +39,7 @@ int validateDate(char *date) {
 int validateISBN(char *isbn) {
     if (strlen(isbn) != 13) return 0;
     for (int i = 0; i < 13; i++) {
-        if (!isdigit(isbn[i])) return 0;
+        if (!isdigit((unsigned char)isbn[i])) return 0;
     }
     return 1;
 }
@@ -43,7 +48,7 @@ int validateCategory(char *cat) {
     const char *validCategories[] = {
             "roman", "bd", "manga", "biographie", "science", "fantasy", "histoire"
     };
-    int size = sizeof(validCategories) / sizeof(validCategories[0]);
+    int size = (int)(sizeof(validCategories) / sizeof(validCategories[0]));
 
     for (int i = 0; i < size; i++) {
         if (strcmp(cat, validCategories[i]) == 0)
@@ -52,6 +57,7 @@ int validateCategory(char *cat) {
     return 0;
 }
 
+// Ajoute un livre (status=1 disponible, nbLoans=0)
 void addBook(Book books[], int *nbBooks) {
     Book newBook;
     newBook.id = generateBookID(books, *nbBooks);
@@ -98,7 +104,7 @@ void addBook(Book books[], int *nbBooks) {
         printf("Format ISBN invalide. Exemple : 9781234567890\n\n");
     }
 
-    // Date
+    // Date (pour récupérer l'année)
     char date[20];
     while (1) {
         printf("Date (jj/mm/aaaa) : ");
@@ -114,8 +120,8 @@ void addBook(Book books[], int *nbBooks) {
     sscanf(date, "%d/%d/%d", &j, &m, &a);
     newBook.year = a;
 
-    newBook.status = 0;
-    newBook.nbLoans = 0;
+    newBook.status  = 1; // disponible
+    newBook.nbLoans = 0; // aucun emprunt
 
     books[*nbBooks] = newBook;
     (*nbBooks)++;
@@ -123,7 +129,7 @@ void addBook(Book books[], int *nbBooks) {
     printf("\n Livre ajoute avec succes ! (ID %d)\n\n", newBook.id);
 }
 
-
+// Affiche tous les livres
 void displayAllBooks(Book books[], int nbBooks) {
 
     if (nbBooks == 0) {
@@ -146,16 +152,17 @@ void displayAllBooks(Book books[], int nbBooks) {
                books[i].author,
                books[i].isbn,
                books[i].category,
-               books[i].status ? "Emprunte" : "Disponible",
-               books[i].nbLoans
-        );
+               (books[i].status == 1) ? "Disponible" : "Emprunte",
+               books[i].nbLoans);
     }
 
     printf("\n=======================================================\n\n");
 }
 
 
-Book* searchBook(Book books[], int nbBooks, int mode) {
+Book* searchBook(Book books[], int nbBooks, int mode, Loan loans[], int *nbLoans,
+                 User users[], int nbUsers,
+                 int idUser) {
     // Vider le buffer avant fgets pour éviter les sauts
     int ch;
     while ((ch = getchar()) != '\n' && ch != EOF);
@@ -199,7 +206,7 @@ Book* searchBook(Book books[], int nbBooks, int mode) {
             printf("-----------------------------------------------\n");
             printf("ID : %d\nTitre : %s\nAuteur : %s\nISBN : %s\nCategorie : %s\nStatut : %s\nEmprunts : %d\n",
                    books[i].id, books[i].title, books[i].author, books[i].isbn,
-                   books[i].category, books[i].status ? "Emprunte" : "Disponible",
+                   books[i].category, (books[i].status == 1 ? "Disponible" : "Emprunte"),
                    books[i].nbLoans);
 
             found = &books[i];  // Dernier livre trouvé
@@ -235,12 +242,26 @@ Book* searchBook(Book books[], int nbBooks, int mode) {
         if (found->status == 0) {
             printf("\nCe livre est disponible\n");
             printf("Souhaitez-vous l'emprunter ? (y/n) : ");
-            char c;
-            scanf(" %c", &c);
-            getchar();
+            char c; scanf(" %c", &c); getchar();
 
             if (c == 'y' || c == 'Y') {
-                printf("Fonction emprunt non encore implementee.\n");
+                int code = enregistrerEmprunt(loans, nbLoans,
+                                              books, nbBooks,
+                                              users, nbUsers,
+                                              found->id, idUser,
+                                              NULL); // date du jour auto
+                if (code == 0) {
+                    printf("Emprunt enregistre.\n");
+                    sauvegarderEmprunts(loans, *nbLoans);
+                    sauvegarderLivres(books, nbBooks);
+                    sauvegarderUtilisateurs(users, nbUsers);
+                } else if (code == -2) {
+                    printf("Livre deja emprunte.\n");
+                } else if (code == -3) {
+                    printf("Limite de prets atteinte (max 3).\n");
+                } else {
+                    printf("Erreur lors de l'emprunt.\n");
+                }
             }
         } else {
             printf("\nCe livre est deja emprunte\n\n");
@@ -249,8 +270,6 @@ Book* searchBook(Book books[], int nbBooks, int mode) {
 
     return found;
 }
-
-
 
 
 // Modify book
@@ -286,6 +305,7 @@ void modifyBook(Book books[], int nbBooks, int id) {
     printf("\nBook updated!\n\n");
 }
 
+// Supprimer un livre (interdit si emprunté)
 void deleteBook(Book books[], int *nbBooks, int id) {
     int index = -1;
 
@@ -301,8 +321,8 @@ void deleteBook(Book books[], int *nbBooks, int id) {
         return;
     }
 
-    // Empêcher suppression si le livre est emprunte
-    if (books[index].status == 1) {
+    // Empêcher suppression si le livre est emprunté (status==0)
+    if (books[index].status == 0) {
         printf("Impossible de supprimer ce livre : il est actuellement emprunte.\n");
         printf("Veuillez attendre son retour avant suppression.\n\n");
         return;
@@ -317,7 +337,7 @@ void deleteBook(Book books[], int *nbBooks, int id) {
     scanf(" %c", &confirm);
     getchar(); // nettoyer buffer
 
-    if (confirm != 'y') {
+    if (confirm != 'y' && confirm != 'Y') {
         printf("Suppression annulee. Aucun changement effectue.\n\n");
         return;
     }

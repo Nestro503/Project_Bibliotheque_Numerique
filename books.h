@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
+#include "library.h"
+#include "users.h"
 
 typedef struct {
     int id;
@@ -25,7 +27,7 @@ int generateBookID(Book books[], int nbBooks);
 
 void displayAllBooks(Book books[], int nbBooks);
 
-Book* searchBook(Book books[], int nbBooks, int mode);
+Book* searchBook(Book books[], int nbBooks, int mode, Loan loans[], int *nbLoans, User users[], int nbUsers, int idUser);
 void deleteBook(Book books[], int *nbBooks, int id);
 void modifyBook(Book books[], int nbBooks, int id);
 
