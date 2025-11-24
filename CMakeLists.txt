@@ -6,7 +6,6 @@ set(CMAKE_C_STANDARD 99)
 add_executable(Project_Bibliotheque_Numerique
         main.c
         books.c
-        library.c
         stockage.c
         users.c
 )

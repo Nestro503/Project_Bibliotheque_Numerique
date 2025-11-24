@@ -1,5 +1,4 @@
 
-#include "library.h"
 #include "books.h"
 #include "stockage.h"
 #include "users.h"
@@ -32,17 +31,14 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers, Loan loan
                 break;
 
             case 2:
-                getchar();
                 searchBook(books, *nbBooks, 0, loans, nbLoans, users, *nbUsers,-1);
                 break;
 
             case 3:
-                getchar();
                 afficherUtilisateurs(users, *nbUsers);
                 break;
 
             case 4 :
-                getchar();
                 searchUtilisateur(users, nbUsers);
 
             case 5: {

@@ -1,2 +1,12 @@
-1;1984;George Orwell;roman;978-2-07-036822-8;1949;0;0
-2;Le Petit Prince;Antoine de Saint-Exupery;bd;978-2-253-05664-5;1943;0;0
+1;1984;George Orwell;roman;978-2-07-036822-8;1949;0;1
+2;Le Petit Prince;Antoine St-Exupery;bd;978-2-253-05664-5;1943;0;0
+3;Harry Potter 1;JK Rowling;fantasy;978-2-07-064302-8;1997;0;2
+4;Seigneur des Anneaux;J.R.R. Tolkien;fantasy;978-2-253-01345-6;1954;0;3
+5;Les Miserables;Victor Hugo;roman;978-2-07-041400-3;1862;0;1
+6;Monte-Cristo;Alexandre Dumas;roman;978-2-07-041403-4;1844;0;0
+7;Naruto 1;Masashi Kishimoto;manga;978-2-123-04567-8;1999;0;4
+8;Dragon Ball 1;Akira Toriyama;manga;978-2-123-06789-0;1984;0;2
+9;Histoire du Temps;Stephen Hawking;science;978-0-553-17521-4;1988;0;1
+10;Steve Jobs Bio;Walter Isaacson;biographie;978-2-253-06897-1;2011;0;0
+11;Histoire France;Jules Michelet;histoire;978-2-07-042100-5;1855;0;1
+12;Tintin Tibet;Herge;bd;978-2-203-01367-0;1960;0;2

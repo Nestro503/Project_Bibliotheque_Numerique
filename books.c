@@ -140,13 +140,13 @@ void displayAllBooks(Book books[], int nbBooks) {
     printf("\n==================== BIBLIOTHEQUE ====================\n\n");
 
     // Table headers
-    printf("%-5s | %-25s | %-20s | %-15s | %-12s | %-10s | %-10s\n",
+    printf("%-5s | %-25s | %-20s | %-18s | %-12s | %-10s | %-10s\n",
            "ID", "Titre", "Auteur", "ISBN", "Categorie", "Statut", "Emprunts");
-    printf("--------------------------------------------------------------------------------------------------------------\n");
+    printf("--------------------------------------------------------------------------------------------------------------------\n");
 
     // Books rows
     for (int i = 0; i < nbBooks; i++) {
-        printf("%-5d | %-25s | %-20s | %-15s | %-12s | %-10s | %-10d\n",
+        printf("%-5d | %-25s | %-20s | %-18s | %-12s | %-10s | %-10d\n",
                books[i].id,
                books[i].title,
                books[i].author,
