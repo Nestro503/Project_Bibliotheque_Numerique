@@ -19,10 +19,8 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers, Loan loan
         printf("1. Ajouter un livre\n");
         printf("2. Rechercher / Modifier / Supprimer un livre\n");
         printf("3. Afficher la liste des utilisateurs\n");
-        printf("4. Ajouter un utilisateur\n");
-        printf("5. Modifier un utilisateur\n");
-        printf("6. Supprimer un utilisateur\n");
-        printf("7. Emprunts en retard\n");
+        printf("4. Ajouter / Modifier / supprimer un utilisateur\n");
+        printf("5. Emprunts en retard\n");
         printf("0. Deconnexion\n");
         printf("Choix : ");
         scanf("%d", &choice);
@@ -43,20 +41,11 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers, Loan loan
                 afficherUtilisateurs(users, *nbUsers);
                 break;
 
-            case 4:
+            case 4 :
                 getchar();
-                ajouterUtilisateur(users, nbUsers);
-                break;
+                searchUtilisateur(users, nbUsers);
 
-            case 5:
-                modifierUtilisateur(users, *nbUsers);
-                break;
-
-            case 6:
-                supprimerUtilisateur(users, nbUsers);
-                break;
-
-            case 7: {
+            case 5: {
                 // nbLoans est un int* dans ce menu -> il faut le déréférencer
                 mettreAJourRetards(loans, *nbLoans, NULL);
                 printf("=== Emprunts en retard ===\n");

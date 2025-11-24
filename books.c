@@ -120,7 +120,7 @@ void addBook(Book books[], int *nbBooks) {
     sscanf(date, "%d/%d/%d", &j, &m, &a);
     newBook.year = a;
 
-    newBook.status  = 1; // disponible
+    newBook.status  = 0; // disponible
     newBook.nbLoans = 0; // aucun emprunt
 
     books[*nbBooks] = newBook;
@@ -152,7 +152,7 @@ void displayAllBooks(Book books[], int nbBooks) {
                books[i].author,
                books[i].isbn,
                books[i].category,
-               (books[i].status == 1) ? "Disponible" : "Emprunte",
+               (books[i].status == 0) ? "Disponible" : "Emprunte",
                books[i].nbLoans);
     }
 

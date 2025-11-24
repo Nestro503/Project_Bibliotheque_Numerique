@@ -17,6 +17,7 @@ typedef struct {
 
 // --- Fonctions pour l’administrateur ---
 void ajouterUtilisateur(User *users, int *nbUsers);
+void searchUtilisateur(User users[], int *nbUsers);
 void afficherUtilisateurs(User *users, int nbUsers);
 void modifierUtilisateur(User *users, int nbUsers);
 void supprimerUtilisateur(User *users, int *nbUsers);

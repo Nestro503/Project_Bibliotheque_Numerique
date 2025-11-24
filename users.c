@@ -25,15 +25,48 @@ int valideEmail(const char *mail) {
     return strchr(mail, '@') != NULL;
 }
 
+void searchUtilisateur(User users[], int *nbUsers) {
+    int choix = -1;
+
+    do {
+        printf("\n===== GESTION UTILISATEURS =====\n");
+        printf("1. Ajouter un utilisateur\n");
+        printf("2. Modifier un utilisateur\n");
+        printf("3. Supprimer un utilisateur\n");
+        printf("0. Retour\n");
+        printf("Votre choix : ");
+        scanf("%d", &choix);
+        getchar(); // consommer le '\n' avant d'utiliser fgets dans users.c
+
+        switch (choix) {
+            case 1:
+                ajouterUtilisateur(users, nbUsers);      // void(User*, int*)
+                break;
+            case 2:
+                modifierUtilisateur(users, *nbUsers);    // void(User*, int)
+                break;
+            case 3:
+                supprimerUtilisateur(users, nbUsers);    // void(User*, int*)
+                break;
+            case 0:
+                printf("Retour au menu administrateur...\n");
+                break;
+            default:
+                printf("Choix invalide.\n");
+                break;
+        }
+    } while (choix != 0);
+}
+
 //Fonction Admin
 void ajouterUtilisateur(User *users, int *nbUsers) {
     User newUser;
     newUser.id = *nbUsers + 1;
 
-    lireChaineValidee(newUser.name, sizeof(newUser.name), "Nom (max 20 caractères) : ", NULL, "");
-    lireChaineValidee(newUser.surname, sizeof(newUser.surname), "Prenom (max 20 caractères) : ", NULL, "");
-    lireChaineValidee(newUser.idStudent, sizeof(newUser.idStudent), "ID etudiant (max 20 caractères) : ", NULL, "");
-    lireChaineValidee(newUser.mail, sizeof(newUser.mail), "Email (max 70 caractères, doit contenir '@') : ", valideEmail, "doit contenir '@'");
+    lireChaineValidee(newUser.name, sizeof(newUser.name), "Nom (max 20 caracteres) : ", NULL, "");
+    lireChaineValidee(newUser.surname, sizeof(newUser.surname), "Prenom (max 20 caracteres) : ", NULL, "");
+    lireChaineValidee(newUser.idStudent, sizeof(newUser.idStudent), "ID etudiant (max 20 caracteres) : ", NULL, "");
+    lireChaineValidee(newUser.mail, sizeof(newUser.mail), "Email (max 70 caracteres, doit contenir '@') : ", valideEmail, "doit contenir '@'");
 
     newUser.nbStudentLoans = 0;
 
