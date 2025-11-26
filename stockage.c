@@ -1,6 +1,8 @@
 
 /* Format par ligne :
-   id;title;author;category;isbn;year;status;nbLoans
+   livre : id;title;author;category;isbn;year;status;nbLoans
+   user : id;nom;surname;email;idstudent;nbloans
+   loan : idloans;idbooks;iduser;dateloan;dateretour;retard
 */
 
 
