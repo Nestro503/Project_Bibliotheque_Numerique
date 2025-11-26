@@ -35,7 +35,7 @@ void supprimerUtilisateur(User *users, int *nbUsers);
 // --- Fonctions pour l’utilisateur simple ---
 int creerCompte(User *users, int *nbUsers);
 int connexionUtilisateur(User *users, int nbUsers);
-void modifierMonCompte(User *users, int monIndex);
+void modifierMonCompte(User *users, int monIndex, int nbUsers);
 void supprimerMonCompte(User *users, int *nbUsers, int *monIndex);
 
 // --- Authentification admin ---

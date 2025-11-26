@@ -88,7 +88,7 @@ void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monInde
                 break;
 
             case 2:
-                modifierMonCompte(users, monIndex);
+                modifierMonCompte(users, monIndex, nbUsers);
                 break;
 
             case 3:
