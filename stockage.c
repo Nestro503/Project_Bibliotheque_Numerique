@@ -257,7 +257,7 @@ int enregistrerEmprunt(Loan loans[], int *nbLoans, Book books[], int nbBooks, Us
     (*nbLoans)++;
 
     // MàJ livre & utilisateur
-    books[ib].status = 0;
+    books[ib].status = 1;
     books[ib].nbLoans += 1;
     users[iu].nbStudentLoans += 1;
 
@@ -291,7 +291,7 @@ int enregistrerRetour(
     loans[ie].late = (diff > 15) ? 1 : 0;
 
     // MàJ livre & utilisateur
-    books[ib].status = 1;
+    books[ib].status = 0;
     if (users[iu].nbStudentLoans > 0) users[iu].nbStudentLoans -= 1;
 
     return 0;

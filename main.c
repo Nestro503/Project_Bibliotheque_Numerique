@@ -106,7 +106,7 @@ void userMenu(Book books[], int nbBooks, User users[], int *nbUsers, int monInde
                 // nbLoans est un int* dans ce menu -> on passe nbLoans tel quel (int*)
                 int code = enregistrerEmprunt(loans, nbLoans, books, nbBooks, users, *nbUsers, idBook, users[monIndex].id, NULL);
                 if (code == 0) printf("Emprunt enregistre.\n");
-                else if (code == -2) printf("Livre déjà emprunte.\n");
+                else if (code == -2) printf("Livre deja emprunte.\n");
                 else if (code == -3) printf("Limite de prets atteinte (max 3).\n");
                 else printf("Erreur.\n");
                 break;
