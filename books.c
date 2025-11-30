@@ -126,6 +126,8 @@ void addBook(Book books[], int *nbBooks) {
     books[*nbBooks] = newBook;
     (*nbBooks)++;
 
+    sauvegarderLivres(books, *nbBooks);
+
     printf("\n Livre ajoute avec succes ! (ID %d)\n\n", newBook.id);
 }
 
@@ -140,13 +142,13 @@ void displayAllBooks(Book books[], int nbBooks) {
     printf("\n==================== BIBLIOTHEQUE ====================\n\n");
 
     // Table headers
-    printf("%-5s | %-25s | %-20s | %-15s | %-12s | %-10s | %-10s\n",
+    printf("%-5s | %-25s | %-20s | %-18s | %-12s | %-10s | %-10s\n",
            "ID", "Titre", "Auteur", "ISBN", "Categorie", "Statut", "Emprunts");
-    printf("--------------------------------------------------------------------------------------------------------------\n");
+    printf("--------------------------------------------------------------------------------------------------------------------\n");
 
     // Books rows
     for (int i = 0; i < nbBooks; i++) {
-        printf("%-5d | %-25s | %-20s | %-15s | %-12s | %-10s | %-10d\n",
+        printf("%-5d | %-25s | %-20s | %-18s | %-12s | %-10s | %-10d\n",
                books[i].id,
                books[i].title,
                books[i].author,
@@ -302,6 +304,8 @@ void modifyBook(Book books[], int nbBooks, int id) {
     scanf("%d", &b->year);
     getchar();
 
+    sauvegarderLivres(books, nbBooks);
+
     printf("\nBook updated!\n\n");
 }
 
@@ -347,6 +351,8 @@ void deleteBook(Book books[], int *nbBooks, int id) {
         books[j] = books[j + 1];
     }
     (*nbBooks)--;
+
+    sauvegarderLivres(books, *nbBooks);
 
     printf("Livre supprime avec succes.\n");
     printf("Le livre n'apparaitra plus dans la bibliotheque ni dans les recherches.\n\n");

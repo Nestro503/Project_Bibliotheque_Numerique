@@ -15,6 +15,16 @@ typedef struct {
     /*time_t datesEmprunt[MAX_EMPRUNTS_PAR_USER];*/
 } User;
 
+typedef struct {
+    int idLoan;          // Identifiant unique de l’emprunt
+    int idBook;            // Référence à l’ID du livre
+    int idUser;      // Référence à l’ID de l’utilisateur
+    char dateLoan[11];   // Date format JJ/MM/AAAA
+    char dateReturn[11];    // Date effective de retour (vide si pas encore rendu)
+    int late;           // 1 si retard, 0 sinon
+} Loan;
+
+
 // --- Fonctions pour l’administrateur ---
 void ajouterUtilisateur(User *users, int *nbUsers);
 void searchUtilisateur(User users[], int *nbUsers);
@@ -25,7 +35,7 @@ void supprimerUtilisateur(User *users, int *nbUsers);
 // --- Fonctions pour l’utilisateur simple ---
 int creerCompte(User *users, int *nbUsers);
 int connexionUtilisateur(User *users, int nbUsers);
-void modifierMonCompte(User *users, int monIndex);
+void modifierMonCompte(User *users, int monIndex, int nbUsers);
 void supprimerMonCompte(User *users, int *nbUsers, int *monIndex);
 
 // --- Authentification admin ---

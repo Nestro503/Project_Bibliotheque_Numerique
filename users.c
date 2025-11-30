@@ -2,6 +2,7 @@
 #include "users.h"
 #include <stdio.h>
 #include <string.h>
+#include "stockage.h"
 
 void lireChaineValidee(char *buffer, int tailleMax, const char *invite, int (*validator)(const char *), const char *msgErreur) {
     while (1) {
@@ -72,6 +73,9 @@ void ajouterUtilisateur(User *users, int *nbUsers) {
 
     users[*nbUsers] = newUser;
     (*nbUsers)++;
+
+    sauvegarderUtilisateurs(users, *nbUsers);
+
     printf("Utilisateur ajoute !\n");
 }
 
@@ -102,6 +106,8 @@ void modifierUtilisateur(User *users, int nbUsers) {
             lireChaineValidee(users[i].surname, sizeof(users[i].surname), "Nouveau prenom (max 20 caracteres) : ", NULL, "");
             lireChaineValidee(users[i].mail, sizeof(users[i].mail), "Nouvel email (max 70 caracteres, doit contenir '@') : ", valideEmail, "doit contenir '@'");
 
+            sauvegarderUtilisateurs(users, nbUsers);
+
             printf("Utilisateur modifie !\n");
             return;
         }
@@ -121,6 +127,8 @@ void supprimerUtilisateur(User *users, int *nbUsers) {
                 users[j] = users[j + 1];
             }
             (*nbUsers)--;
+
+            sauvegarderUtilisateurs(users, *nbUsers);
 
             printf("Utilisateur supprime !\n");
             return;
@@ -147,6 +155,8 @@ int creerCompte(User *users, int *nbUsers) {
     users[*nbUsers] = newUser;
     (*nbUsers)++;
 
+    sauvegarderUtilisateurs(users, *nbUsers);
+
     printf("Compte cree avec succes !\n");
     return *nbUsers - 1;
 }
@@ -168,11 +178,14 @@ int connexionUtilisateur(User *users, int nbUsers) {
     return -1;
 }
 
-void modifierMonCompte(User *users, int monIndex) {
+void modifierMonCompte(User *users, int monIndex, int nbUsers) {
     printf("\n=== Modifier mon compte ===\n");
     lireChaineValidee(users[monIndex].name, sizeof(users[monIndex].name), "Nouveau nom (max 20 caracteres) : ", NULL, "");
     lireChaineValidee(users[monIndex].surname, sizeof(users[monIndex].surname), "Nouveau prenom (max 20 caracteres) : ", NULL, "");
     lireChaineValidee(users[monIndex].mail, sizeof(users[monIndex].mail), "Nouvel email (max 70 caracteres, doit contenir '@') : ", valideEmail, "doit contenir '@'");
+
+    sauvegarderUtilisateurs(users, nbUsers);
+
     printf("Compte mis a jour !\n");
 }
 
@@ -182,6 +195,9 @@ void supprimerMonCompte(User *users, int *nbUsers, int *monIndex) {
     }
     (*nbUsers)--;
     *monIndex = -1;
+
+    sauvegarderUtilisateurs(users, *nbUsers);
+
     printf("Votre compte a ete supprime.\n");
 }
 

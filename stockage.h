@@ -4,7 +4,6 @@
 
 #include "books.h"
 #include "users.h"
-#include "library.h"
 
 int chargerLivres(Book books[], int max);
 int sauvegarderLivres(Book books[], int nb);

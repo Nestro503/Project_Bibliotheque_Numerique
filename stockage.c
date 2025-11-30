@@ -1,6 +1,8 @@
 
 /* Format par ligne :
-   id;title;author;category;isbn;year;status;nbLoans
+   livre : id;title;author;category;isbn;year;status;nbLoans
+   user : id;nom;surname;email;idstudent;nbloans
+   loan : idloans;idbooks;iduser;dateloan;dateretour;retard
 */
 
 
@@ -261,6 +263,10 @@ int enregistrerEmprunt(Loan loans[], int *nbLoans, Book books[], int nbBooks, Us
     books[ib].nbLoans += 1;
     users[iu].nbStudentLoans += 1;
 
+    sauvegarderEmprunts(loans, *nbLoans);
+    sauvegarderLivres(books, nbBooks);
+    sauvegarderUtilisateurs(users, nbUsers);
+
     return 0;
 }
 
@@ -294,6 +300,10 @@ int enregistrerRetour(
     books[ib].status = 0;
     if (users[iu].nbStudentLoans > 0) users[iu].nbStudentLoans -= 1;
 
+    sauvegarderEmprunts(loans, nbLoans);
+    sauvegarderLivres(books, nbBooks);
+    sauvegarderUtilisateurs(users, nbUsers);
+
     return 0;
 }
 
@@ -308,5 +318,8 @@ int mettreAJourRetards(Loan loans[], int nbLoans, const char *todayDate) {
             if (diff > 15) { loans[i].late = 1; nb++; }
         }
     }
+
+    sauvegarderEmprunts(loans, nbLoans);
+
     return nb;
 }
