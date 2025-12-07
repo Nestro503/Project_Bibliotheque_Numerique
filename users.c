@@ -140,6 +140,7 @@ void supprimerUtilisateur(User *users, int *nbUsers) {
 
 // === Fonctions Utilisateur ===
 int creerCompte(User *users, int *nbUsers) {
+    getchar();
     printf("\n=== Creer un compte ===\n");
 
     User newUser;

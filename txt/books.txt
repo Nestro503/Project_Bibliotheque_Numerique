@@ -1,12 +1,13 @@
-1;1984;George Orwell;roman;9782070368228;1949;0;1
+1;1984;George Orwell;roman;9782070368228;1949;1;2
 2;Le Petit Prince;Antoine St-Exupery;bd;9782253056645;1943;0;1
 3;Harry Potter 1;JK Rowling;fantasy;9782070643028;1997;0;2
 4;Seigneur des Anneaux;J.R.R. Tolkien;fantasy;9782253013456;1954;0;3
-5;Les Miserables;Victor Hugo;roman;978207041400-3;1862;0;1
-6;Monte-Cristo;Alexandre Dumas;roman;9782070414034;1844;0;0
+5;Les Miserables;Victor Hugo;roman;9782070414003;1862;0;1
+6;Monte-Cristo;Alexandre Dumas;roman;9782070414034;1844;0;1
 7;Naruto 1;Masashi Kishimoto;manga;9782123045678;1999;0;4
 8;Dragon Ball 1;Akira Toriyama;manga;9782123067890;1984;0;2
 9;Histoire du Temps;Stephen Hawking;science;9780553175214;1988;0;1
 10;Steve Jobs Bio;Walter Isaacson;biographie;9782253068971;2011;0;0
 11;Histoire France;Jules Michelet;histoire;9782070421005;1855;0;1
-12;Tintin Tibet;Herge;bd;9782203013670;1948;1;1
+12;Tintin Tibet;Herge;bd;9782203013670;1960;0;2
+13;hello;wordl;bd;1111111111111;1111;0;2

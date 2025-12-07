@@ -16,9 +16,9 @@ void adminMenu(Book books[], int *nbBooks, User users[], int *nbUsers, Loan loan
 
         printf("\n===== MENU ADMIN =====\n");
         printf("1. Ajouter un livre\n");
-        printf("2. Rechercher / Modifier / Supprimer un livre\n");
+        printf("2. Gestion livre\n");
         printf("3. Afficher la liste des utilisateurs\n");
-        printf("4. Ajouter / Modifier / supprimer un utilisateur\n");
+        printf("4. Gestion utilisateur\n");
         printf("5. Emprunts en retard\n");
         printf("0. Deconnexion\n");
         printf("Choix : ");
