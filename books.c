@@ -326,7 +326,7 @@ void deleteBook(Book books[], int *nbBooks, int id) {
     }
 
     // Empêcher suppression si le livre est emprunté (status==0)
-    if (books[index].status == 0) {
+    if (books[index].status == 1) {
         printf("Impossible de supprimer ce livre : il est actuellement emprunte.\n");
         printf("Veuillez attendre son retour avant suppression.\n\n");
         return;
